@@ -15,7 +15,7 @@ login_manager.init_app(app)
 
 # View Login
 login_manager.login_view = 'login'
-# Session <- Conexão ativa
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
@@ -42,11 +42,21 @@ def logout():
     logout_user()
     return jsonify({"message": "Logout realizado com sucesso!"})
 
+@app.route('/user', methods=['POST'])
+def create_user():
+    data = request.json
+    username = data.get("username")
+    password = data.get("password")
 
-@app.route("/hello-world", methods=["GET"])
-def hello_world():
-    return "Hello World"
-
+    if username and password:
+        user = User(username=username, password=password)
+        db.session.add(user)
+        db.session.commit()
+        return jsonify({'message': 'Usuário cadastrado com sucesso!'}), 201
+    
+    return jsonify({'message': 'Credenciais inválidas!'}), 400
+    
+# Session <- Conexão ativa
 if __name__ == '__main__':
     app.run(debug=True)
 
