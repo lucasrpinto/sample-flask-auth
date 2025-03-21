@@ -33,7 +33,7 @@ def login():
         if user and user.password == password:     
             login_user(user)
             print(current_user.is_authenticated)
-            return jsonify({"message": "Autenticaçção realizada com sucesso!"})
+            return jsonify({"message": "Autenticação realizada com sucesso!"})
     return jsonify({"message": "Credenciais inválidas!"}), 400
 
 @app.route('/logout', methods=['GET'])
@@ -55,7 +55,17 @@ def create_user():
         return jsonify({'message': 'Usuário cadastrado com sucesso!'}), 201
     
     return jsonify({'message': 'Credenciais inválidas!'}), 400
+
+@app.route('/user/<int:id_user>', methods=['GET'])
+@login_required
+def read_user(id_user):
+    user = User.query.get(id_user)
+
+    if user:
+        return {'username': user.username}
     
+    return jsonify({'message': 'Usuário não encontrado'}), 404
+
 # Session <- Conexão ativa
 if __name__ == '__main__':
     app.run(debug=True)
