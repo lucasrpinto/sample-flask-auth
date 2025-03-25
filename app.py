@@ -40,7 +40,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return jsonify({"message": "Logout realizado com sucesso!"})
+    return jsonify({"message": "Logout realizado com sucesso!"}), 200
 
 @app.route('/user', methods=['POST'])
 def create_user():
